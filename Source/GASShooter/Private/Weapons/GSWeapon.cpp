@@ -65,6 +65,19 @@ AGSWeapon::AGSWeapon()
 	StatusText = DefaultStatusText;
 }
 
+AGSWeapon::~AGSWeapon()
+{
+	if (IsValid(LineTraceTargetActor) && GetWorld() && !GetWorld()->bIsTearingDown)
+	{
+		LineTraceTargetActor->Destroy();
+	}
+
+	if (IsValid(SphereTraceTargetActor) && GetWorld() && !GetWorld()->bIsTearingDown)
+	{
+		SphereTraceTargetActor->Destroy();
+	}
+}
+
 UAbilitySystemComponent* AGSWeapon::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -139,7 +152,7 @@ void AGSWeapon::Equip()
 {
 	if (!OwningCharacter)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s %s OwningCharacter is nullptr"), TEXT(__FUNCTION__), *GetName());
+		UE_LOG(LogTemp, Error, TEXT("%s %s OwningCharacter is nullptr"), *FString(__FUNCTION__), *GetName());
 		return;
 	}
 
@@ -211,7 +224,7 @@ void AGSWeapon::AddAbilities()
 
 	if (!ASC)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s %s Role: %s ASC is null"), TEXT(__FUNCTION__), *GetName(), GET_ACTOR_ROLE_FSTRING(OwningCharacter));
+		UE_LOG(LogTemp, Error, TEXT("%s %s Role: %s ASC is null"), *FString(__FUNCTION__), *GetName(), GET_ACTOR_ROLE_FSTRING(OwningCharacter));
 		return;
 	}
 

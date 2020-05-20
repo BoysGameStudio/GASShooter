@@ -3,6 +3,7 @@
 
 #include "Items/Pickups/GSPickup.h"
 #include "AbilitySystemComponent.h"
+#include "Characters/Abilities/GSGameplayAbility.h"
 #include "Characters/GSCharacterBase.h"
 #include "Components/CapsuleComponent.h"
 #include "GASShooter/GASShooter.h"
@@ -81,7 +82,7 @@ void AGSPickup::GivePickupTo(AGSCharacterBase* Pawn)
 
 	if (!ASC)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s Pawn's ASC is null."), TEXT(__FUNCTION__));
+		UE_LOG(LogTemp, Error, TEXT("%s Pawn's ASC is null."), *FString(__FUNCTION__));
 		return;
 	}
 
@@ -91,8 +92,9 @@ void AGSPickup::GivePickupTo(AGSCharacterBase* Pawn)
 		{
 			continue;
 		}
-
-		ASC->GiveAbilityAndActivateOnce(FGameplayAbilitySpec(AbilityClass, 1, static_cast<int32>(AbilityClass.GetDefaultObject()->AbilityInputID), this));
+		
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1, static_cast<int32>(AbilityClass.GetDefaultObject()->AbilityInputID), this);
+		ASC->GiveAbilityAndActivateOnce(AbilitySpec);
 	}
 
 	FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
